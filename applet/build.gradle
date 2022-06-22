@@ -135,7 +135,7 @@ javacard {
 
             //noinspection GroovyAssignabilityCheck
             applet {
-                className 'applet.MainApplet'
+                className 'applet.CBDCWalletApplet'
                 aid '01:ff:ff:04:05:06:07:08:09:01:02'
             }
 

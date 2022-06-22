@@ -1,6 +1,8 @@
 package tests;
 
+import cz.muni.fi.crocs.rcard.client.CardManager;
 import cz.muni.fi.crocs.rcard.client.CardType;
+import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
@@ -14,7 +16,7 @@ import javax.smartcardio.ResponseAPDU;
  * @author xsvenda, Dusan Klinec (ph4r05)
  */
 public class AppletTest extends BaseTest {
-    
+
     public AppletTest() {
         // Change card type here if you want to use physical card
         setCardType(CardType.JCARDSIMLOCAL);
@@ -38,11 +40,56 @@ public class AppletTest extends BaseTest {
 
     // Example test
     @Test
-    public void hello() throws Exception {
-        final CommandAPDU cmd = new CommandAPDU(0x00, 0x90, 0, 0);
+    public void balance() throws Exception {
+        final CommandAPDU cmd = new CommandAPDU(0x00, 0x50, 0, 0);
         final ResponseAPDU responseAPDU = connect().transmit(cmd);
         Assert.assertNotNull(responseAPDU);
         Assert.assertEquals(0x9000, responseAPDU.getSW());
         Assert.assertNotNull(responseAPDU.getBytes());
     }
+
+    @Test
+    public void credit() throws Exception {
+
+        CommandAPDU cmd = new CommandAPDU(0x00, 0x50, 0, 0);
+        ResponseAPDU responseAPDU = connect().transmit(cmd);
+        Assert.assertNotNull(responseAPDU);
+        Assert.assertEquals(0x9000, responseAPDU.getSW());
+        Assert.assertNotNull(responseAPDU.getBytes());
+
+        cmd = new CommandAPDU(0x00, 0x30, 0, 0, new byte[]{0x01});
+        responseAPDU = connect().transmit(cmd);
+        Assert.assertNotNull(responseAPDU);
+        Assert.assertEquals(0x9000, responseAPDU.getSW());
+        Assert.assertNotNull(responseAPDU.getBytes());
+
+        cmd = new CommandAPDU(0x00, 0x50, 0, 0);
+        responseAPDU = connect().transmit(cmd);
+        Assert.assertNotNull(responseAPDU);
+        Assert.assertEquals(0x9000, responseAPDU.getSW());
+        Assert.assertNotNull(responseAPDU.getBytes());
+    }
+
+    @Test
+    public void debit() throws Exception {
+
+        CommandAPDU cmd = new CommandAPDU(0x00, 0x50, 0, 0);
+        ResponseAPDU responseAPDU = connect().transmit(cmd);
+        Assert.assertNotNull(responseAPDU);
+        Assert.assertEquals(0x9000, responseAPDU.getSW());
+        Assert.assertNotNull(responseAPDU.getBytes());
+
+        cmd = new CommandAPDU(0x00, 0x40, 0, 0, new byte[]{0x03});
+        responseAPDU = connect().transmit(cmd);
+        Assert.assertNotNull(responseAPDU);
+        Assert.assertEquals(0x9000, responseAPDU.getSW());
+        Assert.assertNotNull(responseAPDU.getBytes());
+
+        cmd = new CommandAPDU(0x00, 0x50, 0, 0);
+        responseAPDU = connect().transmit(cmd);
+        Assert.assertNotNull(responseAPDU);
+        Assert.assertEquals(0x9000, responseAPDU.getSW());
+        Assert.assertNotNull(responseAPDU.getBytes());
+    }
+
 }
